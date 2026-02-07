@@ -46,7 +46,7 @@ export default function Login({ onLogin }) {
           textAlign: "center",
         }}
       >
-        <h2 style={{ marginBottom: "20px" }}>Login</h2>
+        <h2 style={{ marginBottom: "20px" }}>Welcome</h2>
 
         <form onSubmit={handleSubmit}>
           <input
