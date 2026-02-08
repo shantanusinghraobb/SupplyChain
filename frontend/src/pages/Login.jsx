@@ -1,27 +1,40 @@
 import { useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 export default function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/auth/login/", {
-        username,
-        password,
-      });
+      const res = await axios.post(
+        `${API_BASE_URL}/api/auth/login/`,
+        {
+          username,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      // Save tokens + username
+      // Save JWT tokens
       localStorage.setItem("token", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
       localStorage.setItem("username", res.data.username);
 
-      if (onLogin) onLogin();
+      window.location.href = "/";
     } catch (err) {
       alert("Invalid username or password");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,6 +67,7 @@ export default function Login({ onLogin }) {
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
             style={{
               width: "100%",
               padding: "12px",
@@ -71,6 +85,7 @@ export default function Login({ onLogin }) {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
             style={{
               width: "100%",
               padding: "12px",
@@ -85,19 +100,20 @@ export default function Login({ onLogin }) {
 
           <button
             type="submit"
+            disabled={loading}
             style={{
               width: "100%",
               padding: "12px",
-              background: "#1976d2",
+              background: loading ? "#aaa" : "#1976d2",
               color: "white",
               border: "none",
               borderRadius: "6px",
-              cursor: "pointer",
+              cursor: loading ? "not-allowed" : "pointer",
               fontSize: "16px",
               marginTop: "10px",
             }}
           >
-            LOGIN
+            {loading ? "Logging in..." : "LOGIN"}
           </button>
         </form>
       </div>

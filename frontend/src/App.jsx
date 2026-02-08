@@ -40,9 +40,11 @@ export default function App() {
       {/* If the user is NOT logged in → only render login routes */}
       {!isLoggedIn() ? (
         <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
+
       ) : (
         <>
           {/* TOPBAR */}
