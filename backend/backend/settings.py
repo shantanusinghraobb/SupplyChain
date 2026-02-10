@@ -133,17 +133,30 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # }
 
 
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=os.getenv("DATABASE_URL"),
+#         conn_max_age=600,
+#         ssl_require=not DEBUG
+#     )
+# }
+
+# if not DATABASES['default']:
+#     print("WARNING: DATABASE_URL not set. Database will not work.")
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=not DEBUG
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'supplychain_db_ojbk',
+        'USER': 'supplychain_db_ojbk_user',
+        'PASSWORD': '5MtTR6A5zSCXYTADnBX6h2Uvbb2z9BbI',
+        'HOST': 'dpg-d6497gu3jp1c73bjm0v0-a.oregon-postgres.render.com',
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require',
+        }
+    }
 }
-
-if not DATABASES['default']:
-    print("WARNING: DATABASE_URL not set. Database will not work.")
-
 
 
 CORS_ALLOW_ALL_ORIGINS = True
