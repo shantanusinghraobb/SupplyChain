@@ -5,11 +5,18 @@ import { Box, CssBaseline } from "@mui/material";
 import Topbar from "./components/Topbar";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
-import CuttingPlates from "./pages/CuttingPlates";
-import Analytics from "./pages/Analytics";
-import Reports from "./pages/Reports";
-import Settings from "./pages/Settings";
 import Login from "./pages/Login";
+
+// Master Pages
+import MaterialMaster from "./pages/master/MaterialMaster";
+import ProjectMaster from "./pages/master/ProjectMaster";
+import ContractorVendorMaster from "./pages/master/ContractorVendorMaster";
+import ActivityMaster from "./pages/master/ActivityMaster";
+
+// Transaction Pages
+import GRNEntryForm from "./pages/transaction/GRNEntryForm";
+import IssuePlates from "./pages/transaction/IssuePlates";
+import Fabrication from "./pages/transaction/Fabrication";
 
 const drawerWidth = 240;
 
@@ -20,7 +27,6 @@ export default function App() {
   const isLoggedIn = () => !!localStorage.getItem("token");
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
-  // Responsive layout handler
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 900;
@@ -37,32 +43,27 @@ export default function App() {
     <BrowserRouter>
       <CssBaseline />
 
-      {/* If the user is NOT logged in → only render login routes */}
       {!isLoggedIn() ? (
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
-
       ) : (
         <>
-          {/* TOPBAR */}
           <Topbar toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
 
-          {/* SIDEBAR */}
           <Sidebar
             open={sidebarOpen}
             isMobile={isMobile}
             toggleSidebar={toggleSidebar}
           />
 
-          {/* MAIN AREA */}
           <Box
             component="main"
             sx={{
               ml: sidebarOpen && !isMobile ? `${drawerWidth}px` : 0,
-              pt: "80px", // topbar height
+              pt: "80px",
               px: 3,
               pb: 3,
               backgroundColor: "#f8f9fa",
@@ -73,12 +74,18 @@ export default function App() {
           >
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/cutting-plates" element={<CuttingPlates />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/settings" element={<Settings />} />
 
-              {/* Unknown URL → dashboard */}
+              {/* MASTER ROUTES */}
+              <Route path="/material-master" element={<MaterialMaster />} />
+              <Route path="/project-master" element={<ProjectMaster />} />
+              <Route path="/contractor-vendor-master" element={<ContractorVendorMaster />} />
+              <Route path="/activity-master" element={<ActivityMaster />} />
+
+              {/* TRANSACTION ROUTES */}
+              <Route path="/grn-entry" element={<GRNEntryForm />} />
+              <Route path="/issue-plates" element={<IssuePlates />} />
+              <Route path="/fabrication" element={<Fabrication />} />
+
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </Box>

@@ -1,105 +1,192 @@
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Box } from "@mui/material";
+import {
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+  Box,
+} from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import AnalyticsIcon from "@mui/icons-material/Analytics";
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import SettingsIcon from "@mui/icons-material/Settings";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+import { useState } from "react";
 
 const drawerWidth = 240;
 
-const menuItems = [
-  { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
-
-  // ⭐ NEW ITEM ADDED HERE
-  { text: "Cutting Plates", icon: <AssessmentIcon />, path: "/cutting-plates" },
-
-  { text: "Analytics", icon: <AnalyticsIcon />, path: "/analytics" },
-  { text: "Reports", icon: <AssessmentIcon />, path: "/reports" },
-  { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
-];
-
-
 export default function Sidebar({ open, isMobile, toggleSidebar }) {
   const location = useLocation();
+  const [activeDropdown, setActiveDropdown] = useState("master");
+
+  const isActive = (path) => location.pathname === path;
+
+  const handleDropdown = (menu) => {
+    setActiveDropdown((prev) => (prev === menu ? null : menu));
+  };
 
   return (
     <Drawer
       variant={isMobile ? "temporary" : "persistent"}
       open={open}
       onClose={toggleSidebar}
-      ModalProps={{
-        keepMounted: true, // Better mobile performance
-      }}
       sx={{
-        width: open ? drawerWidth : 0,
-        flexShrink: 0,
+        width: drawerWidth,
         "& .MuiDrawer-paper": {
           width: drawerWidth,
-          boxSizing: "border-box",
-          backgroundColor: "#f8f9fa",
+          backgroundColor: "#ffffff",
           borderRight: "1px solid #e0e0e0",
-          transition: "width 0.3s ease, transform 0.3s ease",
-          transform: open ? "translateX(0)" : "translateX(-100%)",
+          fontSize: "0.875rem",
         },
       }}
     >
-      {/* Spacer for TopBar */}
       <Box sx={{ height: 64 }} />
 
-      <List sx={{ pt: 2, px: 1 }}>
-        {menuItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          
-          return (
-            <ListItem
-              button
-              component={Link}
-              to={item.path}
-              key={item.text}
-              sx={{
-                py: 1.5,
-                px: 2,
-                my: 0.5,
-                borderRadius: 2,
-                color: isActive ? "#1976d2" : "#5f6368",
-                backgroundColor: isActive ? "#e3f2fd" : "transparent",
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  backgroundColor: isActive ? "#e3f2fd" : "#f1f3f4",
-                  transform: "translateX(4px)",
-                },
-              }}
-            >
-              <ListItemIcon
+      <List sx={{ px: 1 }}>
+
+        {/* DASHBOARD */}
+        <ListItemButton
+          component={Link}
+          to="/"
+          selected={isActive("/")}
+          sx={{
+            borderRadius: 1,
+            mb: 1,
+            "&.Mui-selected": {
+              backgroundColor: "#e3f2fd",
+            },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: 34 }}>
+            <DashboardIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItemButton>
+
+        {/* MASTER MAIN */}
+        <ListItemButton
+          onClick={() => handleDropdown("master")}
+          sx={{
+            borderRadius: 1,
+            mb: 0.5,
+            backgroundColor: "#f4f6f8",
+            "&:hover": { backgroundColor: "#e9ecef" },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: 34 }}>
+            <InventoryIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Master" />
+          <ExpandMoreIcon
+            sx={{
+              transition: "0.3s",
+              transform:
+                activeDropdown === "master"
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)",
+            }}
+            fontSize="small"
+          />
+        </ListItemButton>
+
+        <Collapse in={activeDropdown === "master"} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+
+            {[
+              { label: "Item Master", path: "/material-master" },
+              { label: "Project Master", path: "/project-master" },
+              { label: "Contractor / Vendor Master", path: "/contractor-vendor-master" },
+              { label: "Activity Master", path: "/activity-master" },
+            ].map((item) => (
+              <ListItemButton
+                key={item.path}
                 sx={{
-                  color: isActive ? "#1976d2" : "#5f6368",
-                  minWidth: 40,
-                  transition: "color 0.2s ease",
+                  pl: 4,
+                  borderRadius: 1,
+                  mb: 0.5,
+                  "&.Mui-selected": {
+                    backgroundColor: "#e3f2fd",
+                  },
                 }}
+                component={Link}
+                to={item.path}
+                selected={isActive(item.path)}
               >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={item.text}
-                primaryTypographyProps={{
-                  fontSize: "0.95rem",
-                  fontWeight: isActive ? 600 : 500,
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            ))}
+
+          </List>
+        </Collapse>
+
+        {/* TRANSACTION MAIN */}
+        <ListItemButton
+          onClick={() => handleDropdown("transaction")}
+          sx={{
+            borderRadius: 1,
+            mt: 1,
+            mb: 0.5,
+            backgroundColor: "#f4f6f8",
+            "&:hover": { backgroundColor: "#e9ecef" },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: 34 }}>
+            <AssignmentIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Transaction" />
+          <ExpandMoreIcon
+            sx={{
+              transition: "0.3s",
+              transform:
+                activeDropdown === "transaction"
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)",
+            }}
+            fontSize="small"
+          />
+        </ListItemButton>
+
+        <Collapse in={activeDropdown === "transaction"} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+
+            {[
+              { label: "GRN Entry Form", path: "/grn-entry" },
+              { label: "Issue Plates", path: "/issue-plates" },
+              { label: "Fabrication", path: "/fabrication" },
+            ].map((item) => (
+              <ListItemButton
+                key={item.path}
+                sx={{
+                  pl: 4,
+                  borderRadius: 1,
+                  mb: 0.5,
+                  "&.Mui-selected": {
+                    backgroundColor: "#e3f2fd",
+                  },
                 }}
-              />
-            </ListItem>
-          );
-        })}
+                component={Link}
+                to={item.path}
+                selected={isActive(item.path)}
+              >
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            ))}
+
+          </List>
+        </Collapse>
+
       </List>
 
-      {/* Bottom Footer */}
       <Box sx={{ flexGrow: 1 }} />
+
       <Box
         sx={{
           p: 2,
           textAlign: "center",
-          borderTop: "1px solid #e0e0e0",
-          color: "#9e9e9e",
           fontSize: "0.75rem",
+          color: "#999",
         }}
       >
         © 2026 Bala Bharthi

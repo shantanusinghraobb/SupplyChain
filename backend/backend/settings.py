@@ -121,16 +121,16 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'supplychain_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'Verizon@1993',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'supplychain_db',
+        'USER': 'postgres',
+        'PASSWORD': 'Verizon@1993',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 
 # DATABASES = {
@@ -144,19 +144,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # if not DATABASES['default']:
 #     print("WARNING: DATABASE_URL not set. Database will not work.")
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'supplychain_db_ojbk',
-        'USER': 'supplychain_db_ojbk_user',
-        'PASSWORD': '5MtTR6A5zSCXYTADnBX6h2Uvbb2z9BbI',
-        'HOST': 'dpg-d6497gu3jp1c73bjm0v0-a.oregon-postgres.render.com',
-        'PORT': '5432',
-        'OPTIONS': {
-            'sslmode': 'require',
-        }
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'supplychain_db_ojbk',
+#         'USER': 'supplychain_db_ojbk_user',
+#         'PASSWORD': '5MtTR6A5zSCXYTADnBX6h2Uvbb2z9BbI',
+#         'HOST': 'dpg-d6497gu3jp1c73bjm0v0-a.oregon-postgres.render.com',
+#         'PORT': '5432',
+#         'OPTIONS': {
+#             'sslmode': 'require',
+#         }
+#     }
+# }
 
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -197,3 +197,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = r"D:\Project\SupplyChain\backend\Project_Master_LOA_Agreement_Document_Upload"
+MEDIA_URL = "/media/"
