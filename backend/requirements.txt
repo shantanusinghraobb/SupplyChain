@@ -1,14 +1,67 @@
-asgiref==3.11.1
-dj-database-url==3.1.0
+# =========================
+# DJANGO CORE
+# =========================
 Django==6.0.2
-django-cors-headers==4.9.0
 djangorestframework==3.16.1
-djangorestframework_simplejwt==5.5.1
-gunicorn==25.0.3
-packaging==26.0
-psycopg2-binary==2.9.11
-PyJWT==2.11.0
-python-dotenv==1.2.1
+djangorestframework-simplejwt==5.5.1
+asgiref==3.11.1
 sqlparse==0.5.5
 tzdata==2025.3
+
+# =========================
+# DATABASE (PostgreSQL)
+# =========================
+psycopg2-binary==2.9.11
+dj-database-url==3.1.0
+
+# =========================
+# ENV CONFIG
+# =========================
+python-dotenv==1.2.1
+
+# =========================
+# DATA PROCESSING
+# =========================
+pandas==2.2.2
+numpy==1.26.4
+openpyxl==3.1.5
+xlrd==2.0.2
+
+# =========================
+# PDF PROCESSING (OPTIONAL)
+# =========================
+camelot-py==1.0.9
+pdfminer.six==20231228
+pypdf==5.9.0
+
+# =========================
+# AUTH / SECURITY
+# =========================
+PyJWT==2.11.0
+
+# =========================
+# CORS (FRONTEND INTEGRATION)
+# =========================
+django-cors-headers==4.9.0
+
+# =========================
+# STATIC & DEPLOYMENT
+# =========================
+gunicorn==25.0.3
 whitenoise==6.11.0
+packaging==26.0
+
+# =========================
+# IMAGE SUPPORT (RECOMMENDED)
+# =========================
+Pillow==10.3.0
+
+# =========================
+# FILTERING (OPTIONAL BUT USEFUL)
+# =========================
+django-filter==24.2
+
+# =========================
+# DATE UTILITIES (OPTIONAL)
+# =========================
+python-dateutil==2.9.0.post0

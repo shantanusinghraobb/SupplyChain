@@ -38,7 +38,7 @@ class ProjectMaster(models.Model):
 
     type = models.CharField(max_length=50, blank=True, null=True)
     client = models.CharField(max_length=255, blank=True, null=True)
-    document = models.TextField(blank=True, null=True)
+    document = models.FileField(upload_to="project_documents/", null=True, blank=True)
 
     site_name = models.TextField()
     address = models.TextField()
@@ -65,7 +65,7 @@ class GRNHeader(models.Model):
     invoice_no = models.CharField(max_length=100, blank=True, null=True)
     invoice_date = models.DateField(blank=True, null=True)
 
-    receive_location = models.TextField(blank=True, null=True)
+    receive_location = models.TextField(blank=True, null=True, db_column="receive_location")
     received_by = models.CharField(max_length=255, blank=True, null=True)
 
     grn_date = models.DateField(blank=True, null=True)
@@ -115,13 +115,15 @@ class GRNItem(models.Model):
     total_qty = models.DecimalField(max_digits=10, decimal_places=2)
     balance_qty = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
+    weight = models.FloatField(default=0)   # ✅ ADD THIS LINE
+
     class Meta:
         db_table = "grn_item"
 
     def __str__(self):
         return f"{self.item_code} - {self.description}"
     
-    # ==========================================
+# ==========================================
 # STOCK TABLE
 # ==========================================
 class Stock(models.Model):
@@ -140,11 +142,20 @@ class Stock(models.Model):
     description = models.CharField(max_length=255)
     unit = models.CharField(max_length=50)
 
+    # ✅ NEW FIELDS ADDED
     unique_item_id = models.CharField(max_length=100, blank=True, null=True)
 
+    length = models.FloatField(default=0)
+    width = models.FloatField(default=0)
+    thickness = models.FloatField(default=0)
+
+    challan_qty = models.DecimalField(max_digits=10, decimal_places=2)
     total_qty = models.DecimalField(max_digits=10, decimal_places=2)
+    balance_qty = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    weight = models.FloatField(default=0)   # ✅ ADD THIS LINE
 
     class Meta:
         db_table = "stock"

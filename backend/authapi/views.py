@@ -1,3 +1,5 @@
+from urllib import request
+
 from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -5,6 +7,7 @@ from rest_framework import status
 import re
 from django.db.models import Max
 from .models import GRNHeader
+from .models import Stock, GRNItem
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import MaterialMaster
@@ -28,6 +31,17 @@ import time
 import datetime
 import re
 from .models import ProjectMaster
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.db import connection
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.db import connection
+
 
 
 class LoginView(APIView):
@@ -112,7 +126,7 @@ class MaterialMasterDetailView(APIView):
 class ProjectMasterListView(APIView):
 
     def get(self, request):
-        projects = ProjectMaster.objects.all().order_by("id")
+        projects = ProjectMaster.objects.all()
         serializer = ProjectMasterSerializer(projects, many=True)
         return Response(serializer.data)
 
@@ -211,16 +225,17 @@ class GRNView(APIView):
     def post(self, request):
         data = request.data.copy()
 
-        # 🔥 AUTO GENERATE GRN NUMBER HERE
+        # 🔥 AUTO GENERATE GRN NUMBER
         data["grn_no"] = generate_next_grn_number()
 
         serializer = GRNHeaderSerializer(data=data)
 
         if serializer.is_valid():
-            serializer.save()
+            grn = serializer.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        print("❌ SERIALIZER ERROR:", serializer.errors)   # 🔥 ADD THIS LINE
+        print("❌ SERIALIZER ERROR:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
@@ -236,10 +251,42 @@ def generate_next_grn_number():
     return f"GRN{str(next_number).zfill(3)}PLATE"
 
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
+
 
 class NextGRNNumberView(APIView):
     def get(self, request):
         next_number = generate_next_grn_number()
         return Response({"grn_no": next_number})
+
+
+
+@api_view(['GET'])
+def stock_report(request):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT 
+                id,
+                item_code,
+                description,
+                unit,
+                unique_item_id,
+
+                length,
+                width,
+                thickness,
+
+                challan_qty,
+                total_qty,
+                balance_qty,
+                       
+                weight,   -- ✅ ADD THIS
+
+                created_at
+            FROM stock
+            ORDER BY id DESC
+        """)
+
+        columns = [col[0] for col in cursor.description]
+        data = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+    return Response(data)

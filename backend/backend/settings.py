@@ -200,3 +200,6 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = r"D:\Project\SupplyChain\backend\Project_Master_LOA_Agreement_Document_Upload"
 MEDIA_URL = "/media/"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
